@@ -63,13 +63,14 @@ void printOverlayFaces(Arrangement_2 overlay, int faceid, bool inc){
 
     Arrangement_2::Face_iterator             f;
     Arrangement_2::Ccb_halfedge_circulator   e;
+    Arrangement_2::Hole_iterator             h;
 
     int face_num = 1;
     for(f=overlay.faces_begin(); f!=overlay.faces_end(); f++){
         if(inc == 1 and f->data() != faceid) continue;
         if(inc == 0 and f->data() == faceid) continue;    
         //cout << f->data() << endl;
-
+        
         cout << endl;
         cout << "face " << face_num << " : "; face_num++;
         e = f->outer_ccb();
@@ -77,6 +78,18 @@ void printOverlayFaces(Arrangement_2 overlay, int faceid, bool inc){
         do{
             cout << " --> (" << e->target()->point() << ")"; e++;
         } while(e != f->outer_ccb());
+
+        cout << endl;
+
+        int hole_num = 1;
+        for(h=f->holes_begin(); h!=f->holes_end(); h++){
+            e = *h;
+            cout << "------hole " << hole_num << " : "; hole_num++;
+            cout << "(" << e->source()->point() << ")";
+            do{
+                cout << " --> (" << e->target()->point() << ")"; e++;
+            } while(e != *h);
+        }
 
         cout << endl;
     }
